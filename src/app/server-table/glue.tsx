@@ -5,6 +5,8 @@ import React from "react";
 import { useDataTable } from "../_components/use-data-table";
 import { DataTable } from "../_components/data-table";
 import { Button } from "@/components/ui/button";
+import SortableHeader from "../_components/sortable-header";
+import DataTableActions from "../_components/data-table-actions";
 export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "id",
@@ -22,7 +24,9 @@ export const columns: ColumnDef<Task>[] = [
   },
   {
     accessorKey: "description",
-    header: "Description",
+    header: ({ column }) => (
+      <SortableHeader column={column} title="description" />
+    ),
     cell: ({ row }) => {
       return <span>{row.original.description}</span>;
     },
@@ -30,17 +34,17 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "status",
     header: ({ column }) => {
-      return (
-        <Button variant="ghost" onClick={() => column.toggleSorting()}>
-          Toggle sorting status
-        </Button>
-      );
+      return <SortableHeader column={column} canHide={false} title="xd" />;
     },
   },
 ];
 const Glue = ({ data, pageCount }: { data: Task[]; pageCount: number }) => {
   const { table, search } = useDataTable<Task>({ columns, data, pageCount });
-  return <DataTable table={table} search={search} />;
+  return (
+    <DataTable table={table} search={search}>
+      <DataTableActions table={table} />
+    </DataTable>
+  );
 };
 
 export default Glue;

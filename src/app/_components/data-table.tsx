@@ -61,7 +61,7 @@ export function DataTableSearch({
 export function DataTablePagination<TData>({ table }: { table: Table<TData> }) {
   const pageSizes = [10, 25, 50, 100];
   return (
-    <div className="flex w-full flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8 ">
+    <div className="flex mt-3 w-full flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8 ">
       <div className="flex-1 whitespace-nowrap text-sm text-muted-foreground">
         {table?.getFilteredSelectedRowModel().rows.length} of{" "}
         {table?.getFilteredRowModel().rows.length} row(s) selected.
@@ -87,7 +87,7 @@ export function DataTablePagination<TData>({ table }: { table: Table<TData> }) {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex items-center justify-center tect-sm font-medium">
+        <div className="flex items-center justify-center text-sm font-medium">
           Page {table?.getState().pagination.pageIndex + 1} of{" "}
           {table?.getPageCount()}
         </div>
@@ -140,41 +140,54 @@ export function DataTablePagination<TData>({ table }: { table: Table<TData> }) {
 export function DataTable<TData>({
   table,
   search,
+  children,
 }: {
   table?: Table<TData>;
   search?: { searchKey?: string; placeholder: string };
+  children: React.ReactNode;
 }) {
   return (
     <>
-      <DataTableSearch searchKey="title" placeholder="Search by name..." />
+      <div className="mb-4 flex flex-rpw justify-between items-center">
+        <DataTableSearch
+          searchKey={search?.searchKey ?? "PLEASE_PROVIDE_A_SEARCH_KEY"}
+          placeholder={search?.placeholder ?? "Please provide a placeholder"}
+        />
+        {children}
+      </div>
       {table && (
-        <TableC>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((column) => (
-                  <TableHead key={column.id}>
-                    {flexRender(
-                      column.column.columnDef.header,
-                      column.getContext()
-                    )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getCoreRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </TableC>
+        <div className="rounded-md border">
+          <TableC>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((column) => (
+                    <TableHead key={column.id}>
+                      {flexRender(
+                        column.column.columnDef.header,
+                        column.getContext()
+                      )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getCoreRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </TableC>
+        </div>
       )}
       <DataTablePagination table={table} />
     </>

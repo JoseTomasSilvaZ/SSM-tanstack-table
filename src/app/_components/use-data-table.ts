@@ -35,7 +35,7 @@ export interface UseDataTableReturn<TData> {
   };
 }
 
-const searchParamsSchema = z.object({
+export const searchParamsSchema = z.object({
   page: z.coerce.number().optional(),
   per_page: z.coerce.number().optional(),
   sort: z.string().optional(),
@@ -59,6 +59,7 @@ export function useDataTable<TData>(
 
   const createQueryString = React.useCallback(
     (params: Record<string, string | number | null>) => {
+      console.log({ searchParams });
       const newSearchParams = new URLSearchParams(searchParams?.toString());
 
       for (const [key, value] of Object.entries(params)) {
@@ -81,6 +82,9 @@ export function useDataTable<TData>(
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
+  React.useEffect(() => {
+    router.replace(`${path}?${createQueryString({ page, per_page })}`);
+  }, []);
   const [{ pageIndex, pageSize }, setPagination] =
     React.useState<PaginationState>({
       pageIndex: page - 1,
@@ -96,7 +100,7 @@ export function useDataTable<TData>(
   );
 
   React.useEffect(() => {
-    console.log(sorting);
+    console.log(sorting, sorting[0]);
     if (sorting[0]) {
       router.push(
         `${path}?${createQueryString({
@@ -128,7 +132,6 @@ export function useDataTable<TData>(
   const table = useReactTable({
     ...props,
     state: {
-      //   ...props.state,
       pagination,
       rowSelection,
       columnVisibility,
