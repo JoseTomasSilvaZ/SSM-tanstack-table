@@ -3,6 +3,7 @@ import { Table } from "@tanstack/react-table";
 import React from "react";
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
@@ -10,7 +11,7 @@ import {
 import { Button } from "../ui/button";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 
-const HideColumnsToggle = <TData,>({ table }: { table: Table<Task> }) => {
+const HideColumnsToggle = <TData,>({ table }: { table: Table<TData> }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -23,12 +24,14 @@ const HideColumnsToggle = <TData,>({ table }: { table: Table<Task> }) => {
           .getAllColumns()
           .filter((col) => col.getCanHide())
           .map((column) => (
-            <DropdownMenuItem
+            <DropdownMenuCheckboxItem
               key={column.id}
               className="flex items-center capitalize"
+              checked={column.getIsVisible()}
+              onCheckedChange={(value) => column.toggleVisibility(!!value)}
             >
               {column.id}
-            </DropdownMenuItem>
+            </DropdownMenuCheckboxItem>
           ))}
       </DropdownMenuContent>
     </DropdownMenu>
