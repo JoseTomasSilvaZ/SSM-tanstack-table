@@ -1,4 +1,3 @@
-"use clie t";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,8 +8,6 @@ import {
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
 } from "@radix-ui/react-icons";
 import { Column, Row } from "@tanstack/react-table";
 import React from "react";
@@ -33,7 +30,7 @@ const SortableHeader = <TData,>({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost">
+        <Button variant="ghost" className="font-normal text-xs capitalize">
           {title} {icon}
         </Button>
       </DropdownMenuTrigger>
